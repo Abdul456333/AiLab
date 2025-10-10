@@ -1,0 +1,67 @@
+# Iterative Deepening Depth-First Search (IDDFS)
+# ----------------------------------------------
+
+# Depth-Limited Search (DLS)
+def dls(node, goal, depth, graph, path):
+    """
+    Recursive Depth-Limited Search
+    node  : current node being explored
+    goal  : goal node
+    depth : remaining depth limit
+    graph : adjacency list
+    path  : path so far
+    """
+    path = path + [node]  # create a new path list
+    print(f"Visiting: {node}, Depth Remaining: {depth}, Path: {path}")
+
+    if node == goal:
+        return path  # goal found
+
+    if depth == 0:
+        return None  # depth limit reached, stop going deeper
+
+    # explore children
+    for child in graph.get(node, []):
+        found = dls(child, goal, depth - 1, graph, path)
+        if found is not None:
+            return found  # goal found in subtree
+
+    return None  # goal not found at this depth
+
+
+# Iterative Deepening DFS
+def iddfs(start, goal, graph, max_depth):
+    """
+    Perform Iterative Deepening DFS.
+    """
+    for depth in range(max_depth + 1):
+        print(f"\n=== Depth Limit = {depth} ===")
+        path = dls(start, goal, depth, graph, [])
+        if path is not None:
+            print(f"\nGoal found at depth {depth}")
+            return path
+    print("\nGoal not found within depth limit")
+    return None
+
+
+# Example usage
+if __name__ == "__main__":
+    # Graph representation (Adjacency List)
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['D', 'E'],
+        'C': ['F', 'G'],
+        'D': [],
+        'E': [],
+        'F': [],
+        'G': []
+    }
+
+    start_node = 'A'
+    goal_node = 'G'
+    max_depth = 4
+
+    print(f"Starting IDDFS from {start_node} to {goal_node}")
+    result = iddfs(start_node, goal_node, graph, max_depth)
+
+    print("\nResult Path:", result)
